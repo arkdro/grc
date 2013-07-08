@@ -1,0 +1,11 @@
+/dat
+/dat[0-9]
+*~
+/pom.xml
+*jar
+/lib
+/classes
+/native
+/.lein-failures
+/checkouts
+/.lein-deps-sum
