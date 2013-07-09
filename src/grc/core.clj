@@ -5,6 +5,7 @@
   (:require clojure.string)
   (:require grc.check)
   (:require grc.cp)
+  (:require grc.graph)
   (:require grc.misc)
   (:gen-class)
   )
@@ -38,13 +39,13 @@
         lines (clojure.string/split-lines text)
         size-line (first lines)
         data-lines (rest lines)
-        [n-items capacity] (parse-size-line size-line)
-        items (vec (parse-data-lines data-lines))
+        [n-nodes n-edges] (parse-size-line size-line)
+        edges (vec (parse-data-lines data-lines))
         cnt-lines (count data-lines)
-        cnt-items (count items)
+        cnt-edges (count edges)
         ]
-    (assert (= cnt-lines cnt-items) "data items not equal data lines")
-    {:n n-items :c capacity :items items}
+    (assert (= cnt-lines cnt-edges) "data edges not equal to data lines")
+    {:n n-nodes :e n-edges :edges edges}
     ))
 
 (defn call-calc [verbose type data]
@@ -74,10 +75,11 @@
               ["-f" "--file" "input file"])
         [options _ _] opts
         data (get-data (:file options))
+        graph (grc.graph/make-graph data)
         res (call-calc
              (:verbose options)
              (:type options)
-             data)
+             graph)
         ]
     (grc.check/check-solution (:check options) data res)
     (print-result res)))
