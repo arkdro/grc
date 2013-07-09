@@ -1,6 +1,6 @@
 (defproject grc "1.0.0-SNAPSHOT"
   :description "FIXME: write description"
-  :jvm-opts ["-Xmx1000m" "-Xss200m"]
+  ;; :jvm-opts ["-Xmx1000m" "-Xss200m"]
   ;; :global-vars {
   ;;   *warn-on-reflection* true
   ;;   ;;*assert* false
