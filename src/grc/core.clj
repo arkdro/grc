@@ -3,6 +3,8 @@
   (:use [clojure.tools.cli :only [cli]])
   (:use clojure.tools.trace)
   (:require clojure.string)
+  (:require grc.check)
+  (:require grc.cp)
   (:require grc.misc)
   (:gen-class)
   )
@@ -46,7 +48,7 @@
     ))
 
 (defn call-calc [verbose type data]
-  (let [calc-fun (cond (= type 1) grc.bb/calc
+  (let [calc-fun (cond (= type 1) grc.cp/calc
                        :default grc.cp/calc)]
     (if verbose
       (binding [*out* *err* grc.misc/*verbose* 'true]
