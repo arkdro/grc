@@ -14,7 +14,7 @@
   (let [empty-nodes (vec (repeat n-nodes []))
         colors (vec (repeat n-nodes nil))
         nodes-lst (reduce store-node empty-nodes edges)
-        nodes (vec (map vec nodes-lst))
+        nodes (vec (map (comp vec sort) nodes-lst))
         ]
     [nodes colors])
   )
