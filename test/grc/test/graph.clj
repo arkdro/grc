@@ -15,3 +15,21 @@
         ]
   (is (= exp act))))
 
+(deftest make-graph-test
+  (let [
+        edges [[0 1]
+               [1 2]
+               [0 2]
+               [1 3]
+               [2 3]]
+        data {:n 4 :e 5 :edges edges}
+        act (grc.graph/make-graph data)
+        exp-nodes [[1 2]
+                   [0 2 3]
+                   [0 1 3]
+                   [1 2]]
+        exp-colors [nil nil nil nil]
+        exp [exp-nodes exp-colors]
+        ]
+  (is (= exp act))))
+
