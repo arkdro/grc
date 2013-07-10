@@ -11,4 +11,6 @@
     [org.clojure/tools.cli "0.2.2"]
     [com.taoensso/timbre "2.1.2"]
     [org.clojure/tools.trace "0.7.5"]
+    [overtone/at-at "1.2.0"]
+    [org.clojure/tools.logging "0.2.6"]
   ])

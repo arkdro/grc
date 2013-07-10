@@ -1,4 +1,7 @@
-(ns grc.cp)
+(ns grc.cp
+  (:use overtone.at-at)
+  (:use clojure.tools.logging)
+  )
 
 (defn iter-nodes [nodes colors neg-colors flag]
   (let [
