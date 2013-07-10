@@ -48,13 +48,13 @@
     {:n n-nodes :e n-edges :edges edges}
     ))
 
-(defn call-calc [verbose type data]
+(defn call-calc [verbose type limit data]
   (let [calc-fun (cond (= type 1) grc.cp/calc
                        :default grc.cp/calc)]
     (if verbose
       (binding [*out* *err* grc.misc/*verbose* 'true]
-        (time (calc-fun data)))
-      (calc-fun data))))
+        (time (calc-fun data limit)))
+      (calc-fun data limit))))
 
 (defn print-result [{:keys [opt-dp val used-items] :or {opt-dp -1}}]
   (if (= opt-dp val) (println val "1")
@@ -72,6 +72,10 @@
               ["-t" "--type"
                "solution type (0 - CP, default - defined by size)"
                :parse-fn #(Integer. %)]
+              ["-l" "--limit"
+               "time limit, seconds (default ulimited)"
+               :default :infinity
+               :parse-fn #(Integer. %)]
               ["-f" "--file" "input file"])
         [options _ _] opts
         data (get-data (:file options))
@@ -79,6 +83,7 @@
         res (call-calc
              (:verbose options)
              (:type options)
+             (:limit options)
              graph)
         ]
     (grc.check/check-solution (:check options) data res)
