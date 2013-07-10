@@ -13,15 +13,15 @@
     )
   )
 
-(defn calc [[nodes colors] flag]
+(defn calc-aux [[nodes colors] flag]
   (iter-nodes nodes colors [] flag)
   )
 
-(defn timed-calc [graph time-limit]
+(defn calc [graph time-limit]
   (let [flag (atom :go)
         my-pool (mk-pool)
         _ (after time-limit #(compare-and-set! flag :go :stop) my-pool)
-        res (calc graph flag)
+        res (calc-aux graph flag)
         ]
     res)
   )
