@@ -32,10 +32,48 @@
     (if (< cur max-used-colors) cur
         max-used-colors)))
 
-(defn set-node-color [color node nodes colors
-                      neg-colors
-                      used-colors]
-  
+(defn check-node-neg-color [color neg-colors node]
+  (let [node-neg-colors (get neg-colors node)]
+    (not (contains? node-neg-colors color))))
+
+;; return nodes that still do not have this particular color in neg-colors
+(defn filter-nodes-del [neg-colors [color nodes]]
+  (map #(check-node-neg-color color neg-colors %) nodes))
+
+;; given an item to del, return updated neg-colors and
+;; additional items (of type [color nodes]) for add colors,
+;; when after delete there is only one color left
+(defn get-new-items-on-delete [neg-colors h-del]
+  (if (nil? h-del) [neg-colors []]
+      (let [[color _] h-del
+            h-nodes-del (filter-nodes-del neg-colors h-del)
+            new-neg-colors (remove-nodes-colors neg-colors color h-nodes-del)
+            add-items (find-single-colored-items new-neg-colors h-nodes-del)]
+        [new-neg-colors add-items])))
+
+;; to-add/to-del - list of items: [color nodes]
+(defn set-node-color-aux [nodes colors neg-colors used-colors
+                          [h-add & rest-add] [h-del & rest-del]]
+  (if (and (nil? h-add) (nil? h-del)) [colors neg-colors used-colors]
+      (let [
+            [new-neg-colors new-add] (get-new-items-on-delete
+                                      neg-colors
+                                      h-del)
+            [new-colors new-used-colors new-del] (get-new-items-on-add
+                                                  nodes
+                                                  colors
+                                                  new-neg-colors
+                                                  used-colors
+                                                  h-add)]
+        (recur nodes new-colors new-neg-colors new-used-colors
+               (concat new-add rest-add)
+               (concat new-del rest-del)))))
+
+(defn set-node-color [nodes colors neg-colors used-colors]
+  (let [item-to-add [color [node]]]
+    (set-node-color-aux nodes colors neg-colors used-colors
+                        [item-to-add] [])
+    )
   )
 
 (defn iter-nodes-aux [[h & t] free-nodes node
