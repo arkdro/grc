@@ -49,7 +49,59 @@
             h-nodes-del (filter-nodes-del neg-colors h-del)
             new-neg-colors (remove-nodes-colors neg-colors color h-nodes-del)
             add-items (find-single-colored-items new-neg-colors h-nodes-del)]
-        [new-neg-colors add-items])))
+        [new-neg-colors add-items]
+        )))
+
+(defn get-new-items-on-add-aux [nodes
+                                colors
+                                neg-colors
+                                used-colors
+                                color [h & t]
+                                del-items]
+  (if (nil? h) [colors used-colors del-items]
+      (let [cur-node-color (get colors h)]
+        (if (not (nil? cur-node-color)) (if (= cur-node-color color)
+                                          (recur nodes colors neg-colors
+                                                 used-colors color t
+                                                 del-items)
+                                          :fail)
+            (let [adj-nodes (get nodes h)
+                  item [color adj-nodes]
+                  new-del-items (cons item del-items) ;; or add to tail (via assoc)?
+                  new-colors (assoc colors h color)
+                  new-used-colors (assoc used-colors color 't)]
+              (recur nodes
+                     new-colors
+                     neg-colors ;; get rid of it
+                     new-used-colors
+                     color
+                     t
+                     new-del-items))))))
+
+;; given an item to add, return updated *colors and
+;; additional items (of type [color nodes]) to delete colors
+(defn get-new-items-on-add [nodes
+                            colors
+                            neg-colors
+                            used-colors
+                            h-add]
+  (if (nil? h-add) [colors used-colors []]
+      (let [[color h-nodes] h-add]
+        (get-new-items-on-add-aux nodes
+                                  colors
+                                  neg-colors
+                                  used-colors
+                                  color
+                                  h-nodes
+                                  [])
+        )
+      )
+  )
+
+;; return :fail if at least one item of neg-colors is filled completely
+;; i.g. no available colors for coloring left
+(defn empty-colors [neg-colors]
+  )
 
 ;; to-add/to-del - list of items: [color nodes]
 (defn set-node-color-aux [nodes colors neg-colors used-colors
