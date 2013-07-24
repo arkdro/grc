@@ -59,15 +59,16 @@
             [new-neg-colors new-add] (get-new-items-on-delete
                                       neg-colors
                                       h-del)
-            [new-colors new-used-colors new-del] (get-new-items-on-add
-                                                  nodes
-                                                  colors
-                                                  new-neg-colors
-                                                  used-colors
-                                                  h-add)]
-        (recur nodes new-colors new-neg-colors new-used-colors
-               (concat new-add rest-add)
-               (concat new-del rest-del)))))
+            (if (empty-colors neg-colors) :fail
+                [new-colors new-used-colors new-del] (get-new-items-on-add
+                                                      nodes
+                                                      colors
+                                                      new-neg-colors
+                                                      used-colors
+                                                      h-add)]
+            (recur nodes new-colors new-neg-colors new-used-colors
+                   (concat new-add rest-add)
+                   (concat new-del rest-del))))))
 
 (defn set-node-color [nodes colors neg-colors used-colors]
   (let [item-to-add [color [node]]]
