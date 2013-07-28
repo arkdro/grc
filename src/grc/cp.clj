@@ -138,7 +138,9 @@
                          (concat new-add rest-add)
                          (concat new-del rest-del))))))))
 
-(defn set-node-color [nodes colors neg-colors used-colors]
+(defn set-node-color [color node
+                      nodes colors neg-colors used-colors
+                      solution color-limit flag]
   (let [item-to-add [color [node]]]
     (set-node-color-aux nodes colors neg-colors used-colors
                         [item-to-add] [])
