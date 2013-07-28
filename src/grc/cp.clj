@@ -111,6 +111,14 @@
 (defn empty-colors [neg-colors]
   )
 
+;; check:
+;; - failed on add
+;; - too many colors are used
+(defn fail-occur [colors used-colors]
+  (cond (= colors :fail) 'true
+        (> (count used-colors) color-limit) 'true
+        :default 'false))
+
 ;; to-add/to-del - list of items: [color nodes]
 (defn set-node-color-aux [nodes colors neg-colors used-colors
                           [h-add & rest-add] [h-del & rest-del]]
