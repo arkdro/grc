@@ -76,7 +76,8 @@
                                           (recur nodes colors
                                                  used-colors color t
                                                  del-items)
-                                          :fail)
+                                          [:fail] ;; caller expects a list
+                                          )
             (let [item [color (get nodes h)]
                   new-del-items (cons item del-items) ;; or add to the end?
                   new-colors (assoc colors h color)
@@ -126,13 +127,13 @@
       (let [[new-neg-colors new-add] (get-new-items-on-delete
                                       neg-colors
                                       h-del)]
-        (if (empty-colors new-neg-colors) :fail
+        (if (empty-colors new-neg-colors) [:fail]
             (let [[new-colors new-used-colors new-del] (get-new-items-on-add
                                                         nodes
                                                         colors
                                                         used-colors
                                                         h-add)]
-              (if (fail-occur new-colors) :fail
+              (if (fail-occur new-colors new-used-colors) [:fail]
                   (recur nodes new-colors new-neg-colors new-used-colors
                          (concat new-add rest-add)
                          (concat new-del rest-del))))))))
