@@ -147,53 +147,78 @@
     )
   )
 
-(defn iter-nodes-aux [[h & t] free-nodes node
+;; colors are zero based, so [0, 1] gives a new limit of value 2
+(defn get-cur-limit [used-colors]
+  (count used-colors))
+
+(defn feasible [colors neg-colors used-colors solution color-limit]
+  )
+
+(defn iter-nodes-aux [color cur-limit node-neg-colors
+                      node free-nodes
                       nodes colors neg-colors
-                      used-colors max-used-colors color-limit flag]
+                      used-colors solution color-limit flag]
   (cond
-    (no-more-free-nodes free-nodes) (make-solution)
-    (no-more-node-colors used-colors
-                         max-used-colors
-                         color-limit) (make-solution)
-    :default (let [
-                   ;; use h-color
-                   [new-colors
+    (no-more-free-nodes free-nodes) (make-solution) ;; what is in condition???
+    (no-more-node-colors color cur-limit used-colors solution color-limit) (make-solution)
+    (time-is-up) (make-solution)
+    (contains? node-neg-colors color) (recur
+                                      (inc color) cur-limit node-neg-colors
+                                      node free-nodes
+                                      nodes colors neg-colors
+                                      used-colors solution color-limit flag)
+    :default (let [[new-colors
                     new-neg-colors
-                    new-used-colors
-                    new-max-used-colors] (set-node-color h node nodes colors
-                                                         neg-colors
-                                                         used-colors
-                                                         max-used-colors
-                                                         color-limit flag)]
+                    new-used-colors] (set-node-color color node nodes colors
+                                                     neg-colors
+                                                     used-colors
+                                                     solution
+                                                     color-limit flag)]
                (if (feasible new-colors new-neg-colors
                              new-used-colors
-                             new-max-used-colors color-limit)
+                             solution
+                             color-limit)
                  (let [[next-node
                         next-free-nodes
-                        avail-colors] (get-next-node-and-colors
-                                       new-colors new-neg-colors)
-                        max-used-colors2 (iter-nodes-aux
-                                          avail-colors
-                                          next-node next-free-nodes
-                                          new-colors new-neg-colors
-                                          new-used-colors new-max-used-colors
-                                          color-limit flag)]
-                   (recur t free-nodes node nodes colors neg-colors
-                          used-colors max-used-colors2 color-limit flag)
-                   )
-                 (recur t free-nodes node nodes colors neg-colors
-                        used-colors max-used-colors color-limit flag)))))
+                        next-node-neg-colors] (get-next-node-and-colors
+                                               free-nodes
+                                               new-colors
+                                               new-neg-colors)
+                        new-solution (iter-nodes-aux
+                                      0
+                                      (get-cur-limit new-used-colors)
+                                      next-node-neg-colors
+                                      next-node next-free-nodes
+                                      nodes
+                                      new-colors new-neg-colors
+                                      new-used-colors solution
+                                      color-limit flag)]
+                   (recur (inc color) cur-limit node-neg-colors
+                          node free-nodes nodes colors neg-colors
+                          used-colors new-solution color-limit flag)
+                   ) ;; feasible
+                 (recur (inc color) cur-limit node-neg-colors
+                        node free-nodes nodes colors neg-colors
+                        used-colors solution color-limit flag)))))
 
 (defn iter-nodes [[nodes colors] color-limit flag]
-  (let [node 0
+  (let [
         neg-colors []
-        max-used-color 0
-        avail-colors (get-available-colors node colors neg-colors
-                                           max-used-color color-limit)
+        solution 0
+        ;; avail-colors (get-available-colors node colors neg-colors
+        ;;                                    solution color-limit)
+        [node free-nodes node-neg-colors] (get-next-node-and-colors
+                                           nodes
+                                           colors
+                                           neg-colors)
         ]
-    (iter-nodes-aux [avail-colors
+    (iter-nodes-aux [0
+                     0
+                     node-neg-colors
                      node
-                     nodes colors neg-colors max-used-color color-limit flag]
+                     free-nodes
+                     nodes colors neg-colors
+                     used-colors solution color-limit flag]
                     )
     )
   )
