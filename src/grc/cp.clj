@@ -3,23 +3,35 @@
   (:use clojure.tools.logging)
   )
 
-(defn get-next-node-and-colors-aux [[h & t] colors neg-colors
-                                    [prev-avail prev-node :as acc]]
+(defn get-next-node-and-colors-aux [[h & t] nodes colors neg-colors
+                                    [prev-neg prev-node :as acc]]
   (if (nil? h) acc
-      (let [cur-avail (get neg-colors h)]
-        (if (< cur-avail prev-avail) (recur t colors neg-colors [h cur-avail])
-            (recur t colors neg-colors acc)))))
+      (let [cur-neg (get neg-colors h)
+            cur-cnt (count cur-neg)
+            prev-cnt (count prev-neg)]
+        (cond (nil? acc) (recur t nodes colors neg-colors [cur-neg h])
+              (> cur-cnt prev-cnt) (recur t nodes colors neg-colors [cur-neg h])
+              (= cur-cnt prev-cnt) (let [cur-nei (count (get nodes h))
+                                         prev-nei (count (get nodes prev-node))]
+                                     (if (> cur-nei prev-nei)
+                                       (recur t nodes colors neg-colors [cur-neg h])
+                                       (recur t nodes colors neg-colors acc)))
+              :default (recur t nodes colors neg-colors acc)))))
 
-;; get node with smallest domain. It's better to maintain the smallest N
+;; get node with smallest domain (in case of equal, use the node that
+;; has more neighbours). It's better to maintain the smallest N
 ;; somewhere inside neg-colors on updating by set-node-color,
-;; so time to find would be O(1)
+;; so time to find would be O(1).
 (defn get-next-node-and-colors [nodes colors neg-colors]
-  (let [[node avail-colors] (get-next-node-and-colors-aux nodes
-                                                          colors
-                                                          neg-colors
-                                                          nil)
+  (let [nodes-only (keys nodes)
+        [node node-neg-colors] (get-next-node-and-colors-aux
+                                nodes-only
+                                nodes
+                                colors
+                                neg-colors
+                                nil)
         new-nodes (dissoc nodes node)]
-    [node new-nodes avail-colors]))
+    [node new-nodes node-neg-colors]))
 
 (defn no-more-node-colors [used-colors max-used-colors color-limit]
   (let [cur (count used-colors)]
