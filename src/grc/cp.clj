@@ -152,7 +152,10 @@
   (count used-colors))
 
 (defn feasible [colors neg-colors used-colors solution color-limit]
-  )
+  (cond (= colors :fail) 'false
+        (>= (count colors) solution) 'false
+        (>= (count colors) color-limit) 'false
+        :default 'true))
 
 (defn iter-nodes-aux [color cur-limit node-neg-colors
                       node free-nodes
