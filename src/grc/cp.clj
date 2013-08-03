@@ -42,6 +42,10 @@
           :default false)))
 
 (defn make-solution [used-colors max-used-colors]
+
+(defn time-is-up [flag]
+  (= @flag :stop))
+
   (let [cur (count used-colors)]
     (if (< cur max-used-colors) cur
         max-used-colors)))
@@ -238,7 +242,7 @@
                                         free-nodes
                                         nodes colors neg-colors
                                         used-colors solution color-limit flag)
-    (time-is-up) (make-solution)
+    (time-is-up flag) (make-solution used-colors solution)
     (contains? node-neg-colors color) (recur
                                       (inc color) cur-limit node-neg-colors
                                       node free-nodes
