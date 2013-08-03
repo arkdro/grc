@@ -35,20 +35,25 @@
         new-nodes (dissoc nodes node)]
     [node new-nodes node-neg-colors]))
 
-(defn no-more-node-colors [used-colors max-used-colors color-limit]
+(defn no-more-node-colors [used-colors solution color-limit]
   (let [cur (count used-colors)]
     (cond (>= cur color-limit) 'true
-          (>= cur max-used-colors) 'true
+          (>= cur solution) 'true
           :default false)))
 
-(defn make-solution [used-colors max-used-colors]
+(defn no-more-free-nodes [node free-nodes]
+  (cond
+    (nil? node) 'true
+    (nil? free-nodes) 'true
+    :default false))
 
 (defn time-is-up [flag]
   (= @flag :stop))
 
+(defn make-solution [used-colors solution]
   (let [cur (count used-colors)]
-    (if (< cur max-used-colors) cur
-        max-used-colors)))
+    (if (< cur solution) cur
+        solution)))
 
 (defn check-node-neg-color [color neg-colors node]
   (let [node-neg-colors (get neg-colors node)]
@@ -233,10 +238,8 @@
                       nodes colors neg-colors
                       used-colors solution color-limit flag]
   (cond
-    (no-more-free-nodes free-nodes) (make-solution) ;; what is in condition???
-    (no-more-node-colors color
-                         cur-limit
-                         used-colors
+    (no-more-free-nodes node free-nodes) (make-solution used-colors solution)
+    (no-more-node-colors used-colors
                          solution
                          color-limit) #(iter-next-node
                                         free-nodes
