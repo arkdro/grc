@@ -3,6 +3,8 @@
   (:use clojure.tools.logging)
   )
 
+(declare iter-nodes-aux)
+
 (defn get-next-node-and-colors-aux [[h & t] nodes colors neg-colors
                                     [prev-neg prev-node :as acc]]
   (if (nil? h) acc
@@ -147,19 +149,43 @@
     )
   )
 
+;; get new allowed colors: from 0 to N.
+;; 0..N-1 - already used, N - new
 ;; colors are zero based, so [0, 1] gives a new limit of value 2
 (defn get-cur-limit [used-colors]
   (count used-colors))
 
-(defn iter-next-node []
+(defn iter-next-node [free-nodes
+                      nodes colors neg-colors
+                      used-colors solution color-limit flag]
   (let [[next-node next-free-nodes next-node-neg-colors]
-        (get-next-node-and-colors free-nodes new-colors new-neg-colors)]
+        (get-next-node-and-colors free-nodes colors neg-colors)
+        cur-limit (get-cur-limit used-colors)]
     #(iter-nodes-aux 0 cur-limit next-node-neg-colors
-           next-node next-free-nodes nodes colors neg-colors
-           used-colors solution color-limit flag)
+                     next-node next-free-nodes nodes colors neg-colors
+                     used-colors solution color-limit flag)
     ))
 
-(defn iter-next-color []
+(defn choose-solution [cur next]
+  (cond (= next nil) cur
+        (= next :fail) cur
+        (= cur nil) next
+        (= cur :fail) next
+        (< next cur) next
+        :default cur))
+
+;; check if the size of available colors
+;; - smaller than current solution
+;; - below the limit
+(defn feasible [colors neg-colors used-colors solution color-limit]
+  (cond (= colors :fail) 'false
+        (>= (count colors) solution) 'false
+        (>= (count colors) color-limit) 'false
+        :default 'true))
+
+(defn iter-next-color [color cur-limit node-neg-colors
+               node free-nodes nodes colors neg-colors
+               used-colors solution color-limit flag]
   (let [[new-colors
          new-neg-colors
          new-used-colors] (set-node-color color node nodes colors
@@ -185,10 +211,11 @@
                            nodes
                            new-colors new-neg-colors
                            new-used-colors solution
-                           color-limit flag)]
+                           color-limit flag)
+             better-solution (choose-solution solution new-solution)]
         #(iter-nodes-aux (inc color) cur-limit node-neg-colors
                node free-nodes nodes colors neg-colors
-               used-colors new-solution color-limit flag)
+               used-colors better-solution color-limit flag)
         ) ;; feasible
       #(iter-nodes-aux (inc color) cur-limit node-neg-colors
              node free-nodes nodes colors neg-colors
@@ -196,12 +223,6 @@
       )
     )
   )
-
-(defn feasible [colors neg-colors used-colors solution color-limit]
-  (cond (= colors :fail) 'false
-        (>= (count colors) solution) 'false
-        (>= (count colors) color-limit) 'false
-        :default 'true))
 
 (defn iter-nodes-aux [color cur-limit node-neg-colors
                       node free-nodes
@@ -213,14 +234,20 @@
                          cur-limit
                          used-colors
                          solution
-                         color-limit) #(iter-next-node)
+                         color-limit) #(iter-next-node
+                                        free-nodes
+                                        nodes colors neg-colors
+                                        used-colors solution color-limit flag)
     (time-is-up) (make-solution)
     (contains? node-neg-colors color) (recur
                                       (inc color) cur-limit node-neg-colors
                                       node free-nodes
                                       nodes colors neg-colors
                                       used-colors solution color-limit flag)
-    :default #(iter-next-color)
+    :default #(iter-next-color
+               color cur-limit node-neg-colors
+               node free-nodes nodes colors neg-colors
+               used-colors solution color-limit flag)
     )
   )
 
