@@ -146,26 +146,29 @@
 ;; check:
 ;; - failed on add
 ;; - too many colors are used
-(defn fail-occur [colors used-colors]
+(defn fail-occur [color-limit colors used-colors]
   (cond (= colors :fail) 'true
-        (> (count used-colors) color-limit) 'true
-        :default 'false))
+        (> (count used-colors) color-limit) true
+        :default false))
 
 ;; to-add/to-del - list of items: [color nodes]
 (defn set-node-color-aux [nodes colors neg-colors used-colors
+                          color-limit
                           [h-add & rest-add] [h-del & rest-del]]
   (if (and (nil? h-add) (nil? h-del)) [colors neg-colors used-colors]
       (let [[new-neg-colors new-add] (get-new-items-on-delete
+                                      color-limit
                                       neg-colors
                                       h-del)]
-        (if (empty-colors new-neg-colors) [:fail]
+        (if (empty-colors color-limit new-neg-colors) [:fail]
             (let [[new-colors new-used-colors new-del] (get-new-items-on-add
                                                         nodes
                                                         colors
                                                         used-colors
                                                         h-add)]
-              (if (fail-occur new-colors new-used-colors) [:fail]
+              (if (fail-occur color-limit new-colors new-used-colors) [:fail]
                   (recur nodes new-colors new-neg-colors new-used-colors
+                         color-limit
                          (concat new-add rest-add)
                          (concat new-del rest-del))))))))
 
@@ -174,6 +177,7 @@
                       solution color-limit flag]
   (let [item-to-add [color [node]]]
     (set-node-color-aux nodes colors neg-colors used-colors
+                        color-limit
                         [item-to-add] [])
     )
   )
