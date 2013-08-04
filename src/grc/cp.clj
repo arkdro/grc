@@ -133,9 +133,14 @@
       )
   )
 
+(defn filled-neg-colors-for-node [color-limit node-neg-colors]
+  (<= color-limit (count node-neg-colors))
+  )
+
 ;; return true if at least one item of neg-colors is filled completely
 ;; i.e. no available colors for coloring the node left
-(defn empty-colors [neg-colors]
+(defn empty-colors [color-limit neg-colors]
+  (some #(filled-neg-colors-for-node color-limit %) neg-colors)
   )
 
 ;; check:
