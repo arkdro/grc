@@ -63,16 +63,31 @@
 (defn filter-nodes-del [neg-colors [color nodes]]
   (map #(check-node-neg-color color neg-colors %) nodes))
 
+;; for each of h-nodes store color in neg-colors
+(defn remove-nodes-colors [neg-colors color h-nodes-del]
+  (reduce #(assoc-in %1 %2 color) neg-colors h-nodes-del)
+  )
+
+(defn is-node-single-colored [color-limit node neg-colors]
+  (let [node-neg-colors (get neg-colors node)]
+    (= (count node-neg-colors) (dec color-limit))))
+
+;; find nodes that contain only one not active color in neg-colors
+(defn find-single-colored-items [color-limit neg-colors h-nodes-del]
+  (filter #(is-node-single-colored % color-limit neg-colors) h-nodes-del)
+  )
+
 ;; given an item to del, return updated neg-colors and
 ;; additional items (of type [color nodes]) for add colors,
 ;; when after delete there is only one color left
 ;; TODO: add check for empty node colors and fail early
-(defn get-new-items-on-delete [neg-colors h-del]
+(defn get-new-items-on-delete [color-limit neg-colors h-del]
   (if (nil? h-del) [neg-colors []]
       (let [[color _] h-del
             h-nodes-del (filter-nodes-del neg-colors h-del)
             new-neg-colors (remove-nodes-colors neg-colors color h-nodes-del)
-            add-items (find-single-colored-items new-neg-colors h-nodes-del)]
+            add-items (find-single-colored-items
+                       color-limit new-neg-colors h-nodes-del)]
         [new-neg-colors add-items]
         )))
 
