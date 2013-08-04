@@ -284,7 +284,8 @@
 
 (defn iter-nodes [[nodes colors] color-limit flag]
   (let [
-        neg-colors []
+        used-colors #{}
+        neg-colors {}
         solution 0
         ;; avail-colors (get-available-colors node colors neg-colors
         ;;                                    solution color-limit)
@@ -293,14 +294,14 @@
                                            colors
                                            neg-colors)
         ]
-    (trampoline iter-nodes-aux [0
-                     0
-                     node-neg-colors
-                     node
-                     free-nodes
-                     nodes colors neg-colors
-                     used-colors solution color-limit flag]
-                    )
+    (trampoline iter-nodes-aux 0
+                0
+                node-neg-colors
+                node
+                free-nodes
+                nodes colors neg-colors
+                used-colors solution color-limit flag
+                )
     )
   )
 
