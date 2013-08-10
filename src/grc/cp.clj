@@ -44,7 +44,6 @@
 (defn no-more-free-nodes [node free-nodes]
   (cond
     (nil? node) 'true
-    (nil? free-nodes) 'true
     :default false))
 
 (defn time-is-up [flag]
