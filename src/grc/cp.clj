@@ -60,7 +60,7 @@
 
 ;; return nodes that still do not have this particular color in neg-colors
 (defn filter-nodes-del [neg-colors [color nodes]]
-  (map #(check-node-neg-color color neg-colors %) nodes))
+  (filter #(check-node-neg-color color neg-colors %) nodes))
 
 ;; for each of h-nodes store color in neg-colors
 (defn remove-nodes-colors [neg-colors color h-nodes-del]
