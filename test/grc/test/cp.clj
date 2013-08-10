@@ -30,3 +30,14 @@
     (is (= false (grc.cp/check-node-neg-color 3 neg-colors 2)))
     ))
 
+(deftest filter-nodes-del-test
+  (let [neg-colors {1 #{1 3 4}
+                    2 #{2 3 4}}
+        color 2
+        nodes [1 2 3]
+        ]
+    (is (= [1 3] (grc.cp/filter-nodes-del neg-colors [2 nodes])))
+    (is (= [3] (grc.cp/filter-nodes-del neg-colors [3 nodes])))
+    (is (= [2 3] (grc.cp/filter-nodes-del neg-colors [1 nodes])))
+    ))
+
