@@ -62,9 +62,14 @@
 (defn filter-nodes-del [neg-colors [color nodes]]
   (filter #(check-node-neg-color color neg-colors %) nodes))
 
+(defn store-neg-color [color node neg-colors]
+  (let [node-neg-colors (get neg-colors node #{})
+        new-node-neg-colors (conj node-neg-colors color)]
+    (assoc neg-colors node new-node-neg-colors)))
+
 ;; for each of h-nodes store color in neg-colors
 (defn remove-nodes-colors [neg-colors color h-nodes-del]
-  (reduce #(assoc-in %1 %2 color) neg-colors h-nodes-del)
+  (reduce #(store-neg-color color %2 %1) neg-colors h-nodes-del)
   )
 
 (defn is-node-single-colored [color-limit node neg-colors]
