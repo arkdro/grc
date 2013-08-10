@@ -305,15 +305,16 @@
     )
   )
 
-(defn calc-aux [[nodes colors] flag]
-  (iter-nodes nodes colors [] (count nodes) flag)
+(defn calc-aux [graph color-limit flag]
+  (iter-nodes graph color-limit flag)
   )
 
-(defn calc [graph time-limit]
+(defn calc [[nodes colors :as graph] time-limit]
   (let [flag (atom :go)
         my-pool (mk-pool)
         _ (after time-limit #(compare-and-set! flag :go :stop) my-pool)
-        res (calc-aux graph flag)
+        color-limit (count nodes) ;; FIXME: make it real
+        res (calc-aux graph color-limit flag)
         ]
     res)
   )
