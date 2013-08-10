@@ -41,3 +41,16 @@
     (is (= [2 3] (grc.cp/filter-nodes-del neg-colors [1 nodes])))
     ))
 
+(deftest remove-nodes-colors-test
+  (let [neg-colors {1 #{1 3 5}
+                    2 #{2 3 4}}
+        color 5
+        h-nodes-del [1 2 5]
+        act (grc.cp/remove-nodes-colors neg-colors color h-nodes-del)
+        exp {1 #{1 3 5}
+             2 #{2 3 4 5}
+             5 #{5}}
+        ]
+    (is (= exp act))
+    ))
+
