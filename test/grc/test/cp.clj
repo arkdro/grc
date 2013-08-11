@@ -62,9 +62,55 @@
     (is (= true (grc.cp/is-node-single-colored color-limit 2 neg-colors)))
     ))
 
+(deftest find-missing-item-test
+  (is (= 2 (grc.cp/find-missing-item 3 #{0 1 3})))
+  (is (= nil (grc.cp/find-missing-item 3 #{0 1 2 3})))
+  )
+
+(deftest make-one-add-item-test
+  (let [
+        neg-colors {1 #{0 2 3 4}
+                    2 #{1 2 3 4}}
+        color-limit 5]
+    (is (= [1 [1]] (grc.cp/make-one-add-item color-limit 1 neg-colors)))
+    (is (= [0 [2]] (grc.cp/make-one-add-item color-limit 2 neg-colors)))
+    (is (= [4 [3]] (grc.cp/make-one-add-item color-limit 3 neg-colors)))
+    ))
+
 (deftest find-single-colored-items-test
   (let [neg-colors {1 #{1 3 5}
                     2 #{1 2 3 4}}]
-    (is (= [2] (grc.cp/find-single-colored-items 5 neg-colors [1 2 3])))
+    (is (= [[0 [2]]] (grc.cp/find-single-colored-items 5 neg-colors [1 2 3])))
+    ))
+
+(deftest get-new-items-on-delete-test-1
+  (let [neg-colors {1 #{0 1 3}
+                    2 #{0 1 2 3 4}}
+        ]
+    (is (= [neg-colors []] (grc.cp/get-new-items-on-delete 5 neg-colors nil)))
+    ))
+
+(deftest get-new-items-on-delete-test-2
+  (let [neg-colors {1 #{0 1 3}
+                    2 #{0 1 2 3 4}}
+        h-del [3 [1 2 4]]
+        exp [{1 #{0 1 3}
+              2 #{0 1 2 3 4}
+              4 #{3}}
+             []]
+        ]
+    (is (= exp (grc.cp/get-new-items-on-delete 5 neg-colors h-del)))
+    ))
+
+(deftest get-new-items-on-delete-test-3
+  (let [neg-colors {1 #{0 1 3}
+                    2 #{0 1 2 3 4}}
+        h-del [2 [1 2 4]]
+        exp [{1 #{0 1 2 3}
+              2 #{0 1 2 3 4}
+              4 #{2}}
+             [[4 [1]]]]
+        ]
+    (is (= exp (grc.cp/get-new-items-on-delete 5 neg-colors h-del)))
     ))
 
