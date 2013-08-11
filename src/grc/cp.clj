@@ -78,7 +78,7 @@
 
 ;; find nodes that contain only one not active color in neg-colors
 (defn find-single-colored-items [color-limit neg-colors h-nodes-del]
-  (filter #(is-node-single-colored % color-limit neg-colors) h-nodes-del)
+  (filter #(is-node-single-colored color-limit % neg-colors) h-nodes-del)
   )
 
 ;; given an item to del, return updated neg-colors and
