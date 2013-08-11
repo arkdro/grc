@@ -54,3 +54,17 @@
     (is (= exp act))
     ))
 
+(deftest is-node-single-colored-test
+  (let [neg-colors {1 #{1 3 5}
+                    2 #{1 2 3 4}}
+        color-limit 5]
+    (is (= false (grc.cp/is-node-single-colored color-limit 1 neg-colors)))
+    (is (= true (grc.cp/is-node-single-colored color-limit 2 neg-colors)))
+    ))
+
+(deftest find-single-colored-items-test
+  (let [neg-colors {1 #{1 3 5}
+                    2 #{1 2 3 4}}]
+    (is (= [2] (grc.cp/find-single-colored-items 5 neg-colors [1 2 3])))
+    ))
+
