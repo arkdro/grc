@@ -76,10 +76,22 @@
   (let [node-neg-colors (get neg-colors node)]
     (= (count node-neg-colors) (dec color-limit))))
 
+(defn find-missing-item [x coll]
+  (cond (< x 0) nil
+        (contains? coll x) (recur (dec x) coll)
+        :default x))
+
+(defn make-one-add-item [color-limit node neg-colors]
+  (let [node-neg-colors (get neg-colors node)
+        missing (find-missing-item (dec color-limit) node-neg-colors)]
+    [missing [node]]))
+
 ;; find nodes that contain only one not active color in neg-colors
 (defn find-single-colored-items [color-limit neg-colors h-nodes-del]
-  (filter #(is-node-single-colored color-limit % neg-colors) h-nodes-del)
-  )
+  (let [singles (filter
+                 #(is-node-single-colored color-limit % neg-colors)
+                 h-nodes-del)]
+    (map #(make-one-add-item color-limit % neg-colors) singles)))
 
 ;; given an item to del, return updated neg-colors and
 ;; additional items (of type [color nodes]) for add colors,
