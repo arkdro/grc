@@ -149,7 +149,7 @@
       )
   )
 
-(defn filled-neg-colors-for-node [color-limit node-neg-colors]
+(defn filled-neg-colors-for-node [color-limit [_node node-neg-colors]]
   (<= color-limit (count node-neg-colors))
   )
 
