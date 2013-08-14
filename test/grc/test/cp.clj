@@ -114,3 +114,19 @@
     (is (= exp (grc.cp/get-new-items-on-delete 5 neg-colors h-del)))
     ))
 
+(deftest filled-neg-colors-for-node-test
+  (is (= false (grc.cp/filled-neg-colors-for-node 3 [0 #{1}])))
+  (is (= true (grc.cp/filled-neg-colors-for-node 3 [0 #{1 5 7 9}])))
+  (is (= true (grc.cp/filled-neg-colors-for-node 3 [0 #{1 5 6}])))
+  )
+
+(deftest empty-colors-test
+  (let [neg-colors1 {1 #{0 1 3}
+                     2 #{0 1 2 3 4}}
+        neg-colors2 {1 #{0 3}
+                     2 #{1 4}}
+        ]
+    (is (= true (grc.cp/empty-colors 3 neg-colors1)))
+    (is (= nil (grc.cp/empty-colors 3 neg-colors2)))
+    ))
+
