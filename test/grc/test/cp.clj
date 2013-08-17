@@ -130,3 +130,23 @@
     (is (= nil (grc.cp/empty-colors 3 neg-colors2)))
     ))
 
+(deftest fail-occur-test
+  (let [colors #{1 2}]
+    (is (= true (grc.cp/fail-occur 3 :fail #{})))
+    (is (= true (grc.cp/fail-occur 3 colors #{3 4 5 6})))
+    (is (= false (grc.cp/fail-occur 3 colors #{3 4})))
+    ))
+
+(deftest get-cur-limit-test
+  (is (= 2 (grc.cp/get-cur-limit #{3 4}))))
+
+(deftest choose-solution-test
+  (is (= 1 (grc.cp/choose-solution 1 nil)))
+  (is (= 2 (grc.cp/choose-solution 2 :fail)))
+  (is (= 3 (grc.cp/choose-solution nil 3)))
+  (is (= 4 (grc.cp/choose-solution :fail 4)))
+  (is (= 5 (grc.cp/choose-solution 5 6)))
+  (is (= 6 (grc.cp/choose-solution 7 6)))
+  (is (= 9 (grc.cp/choose-solution 9 9)))
+  )
+
