@@ -168,6 +168,7 @@
         :default false))
 
 ;; to-add/to-del - list of items: [color nodes]
+;; is used-colors really needed here?
 (defn set-node-color-aux [nodes colors neg-colors used-colors
                           color-limit
                           [h-add & rest-add] [h-del & rest-del]]
