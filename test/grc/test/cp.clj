@@ -150,3 +150,14 @@
   (is (= 9 (grc.cp/choose-solution 9 9)))
   )
 
+(deftest feasible-test
+  (let [neg-colors :ignored
+        used-colors :ignored
+        solution 3
+        color-limit 5]
+    (is (= false (grc.cp/feasible :fail neg-colors used-colors 3 5)))
+    (is (= false (grc.cp/feasible #{1 2 3} neg-colors used-colors 3 5)))
+    (is (= false (grc.cp/feasible #{1 2 3 4} neg-colors used-colors 3 5)))
+    (is (= true (grc.cp/feasible #{1 4} neg-colors used-colors 3 5)))
+    ))
+
