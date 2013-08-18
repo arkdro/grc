@@ -123,7 +123,7 @@
             (let [item [color (get nodes h)]
                   new-del-items (cons item del-items) ;; or add to the end?
                   new-colors (assoc colors h color)
-                  new-used-colors (assoc used-colors color :t)]
+                  new-used-colors (conj used-colors color)]
               (recur nodes
                      new-colors
                      new-used-colors
