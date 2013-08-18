@@ -161,3 +161,76 @@
     (is (= true (grc.cp/feasible #{1 4} neg-colors used-colors 3 5)))
     ))
 
+(deftest get-new-items-on-add-aux-test-1
+  (let [nodes {1 [3 4], 2 [3 4], 3 [1 2], 4 [1 2]}
+        colors {1 0, 2 1}
+        used-colors #{0 1}
+        color 2
+        h-nodes [3 4]
+        del-items []
+        act (grc.cp/get-new-items-on-add-aux nodes
+                                             colors
+                                             used-colors
+                                             color
+                                             []
+                                             del-items)
+        exp [colors used-colors del-items]]
+    (is (= exp act))
+    ))
+
+(deftest get-new-items-on-add-aux-test-2
+  (let [nodes {1 [3 4], 2 [3 4], 3 [1 2], 4 [1 2]}
+        colors {1 0, 2 1}
+        used-colors #{0 1}
+        color 2
+        h-nodes [1]
+        del-items []
+        act (grc.cp/get-new-items-on-add-aux nodes
+                                             colors
+                                             used-colors
+                                             color
+                                             h-nodes
+                                             del-items)
+        ]
+    (is (= [:fail] act))
+    ))
+
+(deftest get-new-items-on-add-aux-test-3
+  (let [nodes {1 [3 4], 2 [3 4], 3 [1 2], 4 [1 2]}
+        colors {1 0, 2 1} ;; node -> color
+        used-colors #{0 1}
+        color 0
+        h-nodes [1]
+        del-items [:stub]
+        act (grc.cp/get-new-items-on-add-aux nodes
+                                             colors
+                                             used-colors
+                                             color
+                                             h-nodes
+                                             del-items)
+        exp [colors used-colors del-items]]
+    (is (= exp act))
+    ))
+
+;; new node that does not have color assigned
+(deftest get-new-items-on-add-aux-test-4
+  (let [nodes {1 [3 4], 2 [3 4], 3 [1 2], 4 [1 2]}
+        colors {1 0, 2 1} ;; node -> color
+        used-colors #{0 1}
+        color 2
+        node 3
+        h-nodes [node]
+        del-items [:stub4]
+        act (grc.cp/get-new-items-on-add-aux nodes
+                                             colors
+                                             used-colors
+                                             color
+                                             h-nodes
+                                             del-items)
+        exp-colors {1 0, 2 1, 3 2}
+        exp-del-items [[color [1 2]] :stub4]
+        exp-used-colors #{0 1 2}
+        exp [exp-colors exp-used-colors exp-del-items]]
+    (is (= exp act))
+    ))
+
