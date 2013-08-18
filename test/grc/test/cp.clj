@@ -234,3 +234,32 @@
     (is (= exp act))
     ))
 
+(deftest get-new-items-on-add-test-1
+  (let [nodes {1 [3 4], 2 [3 4], 3 [1 2], 4 [1 2]}
+        colors {}
+        used-colors #{}
+        act (grc.cp/get-new-items-on-add nodes
+                                         colors
+                                         used-colors
+                                         [])
+        ]
+    (is (= [{} #{} []] act))
+    ))
+
+(deftest get-new-items-on-add-test-2
+  (let [nodes {1 [3 4], 2 [3 4], 3 [1 2], 4 [1 2]}
+        colors {}
+        used-colors #{}
+        h-add [0 [1]]
+        act (grc.cp/get-new-items-on-add nodes
+                                         colors
+                                         used-colors
+                                         h-add)
+        exp-colors {1 0}
+        exp-used-colors #{0}
+        exp-h-del [[0 [3 4]]]
+        exp [exp-colors exp-used-colors exp-h-del]
+        ]
+    (is (= exp act))
+    ))
+
