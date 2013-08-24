@@ -322,3 +322,20 @@
     (is (= exp3 act3))
     ))
 
+(deftest get-next-node-and-colors-test
+  (let [nodes {1 [3 4], 2 [3 4 5], 3 [1 2 5], 4 [1 2 6], 5 [2 3], 6 [4]}
+        neg-colors {1 #{0 1 3}
+                    2 #{0 2}
+                    3 #{3 4 5}
+                    4 #{0 1 2}
+                    5 #{1 2}
+                    }
+        colors :not_used
+        act (grc.cp/get-next-node-and-colors nodes colors neg-colors)
+        exp-new-nodes {1 [3 4], 2 [3 4 5], 4 [1 2 6], 5 [2 3], 6 [4]}
+        exp [3 exp-new-nodes #{3 4 5}]
+        ]
+    (is (= exp act))
+    )
+  )
+
