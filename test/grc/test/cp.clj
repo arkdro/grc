@@ -263,3 +263,14 @@
     (is (= exp act))
     ))
 
+(deftest new-neighbour-greater-test
+  (let [nodes {1 [3 4], 2 [3 4 5], 3 [1 2], 4 [1 2], 5 [2]}]
+    (is (= false (grc.cp/new-neighbour-greater 1 3 nodes)))
+    (is (= false (grc.cp/new-neighbour-greater 1 2 nodes)))
+    (is (= true (grc.cp/new-neighbour-greater 2 4 nodes)))
+    ))
+
+(deftest get-next-node-and-colors-aux-test-1
+  (is (= [1 2] (grc.cp/get-next-node-and-colors-aux [] {} [] {} [1 2])))
+  )
+
