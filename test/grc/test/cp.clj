@@ -280,8 +280,8 @@
                     2 #{0 1 2 3 4}
                     5 #{1}
                     }
-        act (grc.cp/get-next-node-and-colors-aux [2] nodes neg-colors [#{1} 5])
-        exp [#{0 1 2 3 4} 2]
+        act (grc.cp/get-next-node-and-colors-aux [2] nodes neg-colors [5 #{1}])
+        exp [2 #{0 1 2 3 4}]
         ]
     (is (= exp act))
     ))
@@ -293,8 +293,8 @@
                     5 #{1}
                     }
         act (grc.cp/get-next-node-and-colors-aux [5] nodes neg-colors
-                                                 [#{0 1 3} 1])
-        exp [#{0 1 3} 1]
+                                                 [1 #{0 1 3}])
+        exp [1 #{0 1 3}]
         ]
     (is (= exp act))
     ))
@@ -308,14 +308,14 @@
                     5 #{1 2}
                     }
         act1 (grc.cp/get-next-node-and-colors-aux [5] nodes neg-colors
-                                                  [#{0 2} 2])
-        exp1 [#{0 2} 2]
+                                                  [2 #{0 2}])
+        exp1 [2 #{0 2}]
         act2 (grc.cp/get-next-node-and-colors-aux [3] nodes neg-colors
-                                                  [#{0 1 3} 1])
-        exp2 [#{3 4 5} 3]
+                                                  [1 #{0 1 3}])
+        exp2 [3 #{3 4 5}]
         act3 (grc.cp/get-next-node-and-colors-aux [4] nodes neg-colors
-                                                  [#{3 4 5} 3])
-        exp3 [#{3 4 5} 3]
+                                                  [3 #{3 4 5}])
+        exp3 [3 #{3 4 5}]
         ]
     (is (= exp1 act1))
     (is (= exp2 act2))
