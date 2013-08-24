@@ -10,22 +10,22 @@
         prev-nei (count (get nodes prev))]
     (> new-nei prev-nei)))
 
-(defn get-next-node-and-colors-aux [[h & t] nodes colors neg-colors
+(defn get-next-node-and-colors-aux [[h & t] nodes neg-colors
                                     [prev-neg prev-node :as acc]]
   (if (nil? h) acc
       (let [cur-neg (get neg-colors h)
             new-acc [cur-neg h]]
-        (if (nil? acc) (recur t nodes colors neg-colors new-acc)
+        (if (nil? acc) (recur t nodes neg-colors new-acc)
             (let [cur-cnt (count cur-neg)
                   prev-cnt (count prev-neg)]
               (cond
-                (> cur-cnt prev-cnt) (recur t nodes colors neg-colors new-acc)
+                (> cur-cnt prev-cnt) (recur t nodes neg-colors new-acc)
                 (= cur-cnt prev-cnt) (if (new-neighbour-greater h
                                                                 prev-node
                                                                 nodes)
-                                       (recur t nodes colors neg-colors new-acc)
-                                       (recur t nodes colors neg-colors acc))
-                :default (recur t nodes colors neg-colors acc)))))))
+                                       (recur t nodes neg-colors new-acc)
+                                       (recur t nodes neg-colors acc))
+                :default (recur t nodes neg-colors acc)))))))
 
 ;; get node with smallest domain (in case of equal, use the node that
 ;; has more neighbours). It's better to maintain the smallest N
@@ -36,7 +36,6 @@
         [node node-neg-colors] (get-next-node-and-colors-aux
                                 nodes-only
                                 nodes
-                                colors
                                 neg-colors
                                 nil)
         new-nodes (dissoc nodes node)]
