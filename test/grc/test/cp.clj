@@ -271,6 +271,6 @@
     ))
 
 (deftest get-next-node-and-colors-aux-test-1
-  (is (= [1 2] (grc.cp/get-next-node-and-colors-aux [] {} [] {} [1 2])))
+  (is (= [1 2] (grc.cp/get-next-node-and-colors-aux [] {} [] [1 2])))
   )
 
