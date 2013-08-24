@@ -11,10 +11,10 @@
     (> new-nei prev-nei)))
 
 (defn get-next-node-and-colors-aux [[h & t] nodes neg-colors
-                                    [prev-neg prev-node :as acc]]
+                                    [prev-node prev-neg :as acc]]
   (if (nil? h) acc
       (let [cur-neg (get neg-colors h)
-            new-acc [cur-neg h]]
+            new-acc [h cur-neg]]
         (if (nil? acc) (recur t nodes neg-colors new-acc)
             (let [cur-cnt (count cur-neg)
                   prev-cnt (count prev-neg)]
