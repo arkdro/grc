@@ -356,3 +356,7 @@
     )
   )
 
+(def set-node-color-aux-test-1
+    (is (= [2 3 4] (grc.cp/set-node-color-aux 1 2 3 4 5 [] [])))
+  )
+
