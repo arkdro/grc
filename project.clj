@@ -7,7 +7,7 @@
   ;;   }
   :main grc.core
   :dependencies [
-    [org.clojure/clojure "1.3.0"]
+    [org.clojure/clojure "1.4.0"]
     [org.clojure/tools.cli "0.2.2"]
     [com.taoensso/timbre "2.1.2"]
     [org.clojure/tools.trace "0.7.5"]
