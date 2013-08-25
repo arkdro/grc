@@ -67,6 +67,7 @@
 
 (deftest find-missing-item-test
   (is (= 2 (grc.cp/find-missing-item 3 #{0 1 3})))
+  (is (= nil (grc.cp/find-missing-item -1 #{0 1 3})))
   (is (= nil (grc.cp/find-missing-item 3 #{0 1 2 3})))
   )
 
