@@ -136,7 +136,7 @@
 
 (deftest fail-occur-test
   (let [colors #{1 2}]
-    (is (= true (grc.cp/fail-occur 3 [:fail] #{})))
+    (is (= true (grc.cp/fail-occur 3 :fail #{})))
     (is (= true (grc.cp/fail-occur 3 colors #{3 4 5 6})))
     (is (= false (grc.cp/fail-occur 3 colors #{3 4})))
     ))
