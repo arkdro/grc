@@ -360,3 +360,23 @@
     (is (= [2 3 4] (grc.cp/set-node-color-aux 1 2 3 4 5 [] [])))
   )
 
+(def set-node-color-aux-test-1
+  (let [nodes {1 [3], 2 [3], 3 [1 2]}
+        colors {}
+        neg-colors {1 #{0 1}}
+        used-colors #{}
+        color-limit 2
+        items-add [1 [1]]
+        items-del []
+        act (grc.cp/set-node-color-aux nodes
+                                       colors
+                                       neg-colors
+                                       used-colors
+                                       color-limit
+                                       items-add
+                                       items-del)
+        exp [:fail]
+        ]
+    (is (= exp act))
+    ))
+
