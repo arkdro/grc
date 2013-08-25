@@ -8,6 +8,9 @@
 
 (deftest no-more-node-colors-test
   (is (= false (grc.cp/no-more-node-colors #{5} 2 2)))
+  (is (= false (grc.cp/no-more-node-colors #{1 5 3} 6 4)))
+  (is (= true (grc.cp/no-more-node-colors #{1 5 3} 2 4)))
+  (is (= true (grc.cp/no-more-node-colors #{1 5 3} 2 2)))
   (is (= true (grc.cp/no-more-node-colors #{1 5} 2 2)))
   (is (= true (grc.cp/no-more-node-colors #{1 5} 1 3)))
   )
