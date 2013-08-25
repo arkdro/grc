@@ -1,3 +1,4 @@
+target/coverage/
 /dat
 /dat[0-9]
 *~
