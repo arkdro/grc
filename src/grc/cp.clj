@@ -169,7 +169,7 @@
 ;; - failed on add
 ;; - too many colors are used
 (defn fail-occur [color-limit colors used-colors]
-  (cond (= colors [:fail]) 'true
+  (cond (= colors :fail) 'true
         (> (count used-colors) color-limit) true
         :default false))
 
