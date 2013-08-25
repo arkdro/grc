@@ -366,7 +366,7 @@
         neg-colors {1 #{0 1}}
         used-colors #{}
         color-limit 2
-        items-add [1 [1]]
+        items-add [[1 [1]]]
         items-del []
         act (grc.cp/set-node-color-aux nodes
                                        colors
