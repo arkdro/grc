@@ -142,16 +142,14 @@
 (defn get-new-items-on-add [nodes
                             colors
                             used-colors
-                            h-add]
+                            [color h-nodes :as h-add]]
   (if (nil? h-add) [colors used-colors []]
-      (let [[color h-nodes] h-add]
-        (get-new-items-on-add-aux nodes
-                                  colors
-                                  used-colors
-                                  color
-                                  h-nodes
-                                  [])
-        )
+      (get-new-items-on-add-aux nodes
+                                colors
+                                used-colors
+                                color
+                                h-nodes
+                                [])
       )
   )
 
