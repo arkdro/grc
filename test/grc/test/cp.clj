@@ -380,3 +380,25 @@
     (is (= exp act))
     ))
 
+;; node 1 has been set to color 0
+;; trying to set node 1 to color 2
+(def set-node-color-aux-test-3
+  (let [nodes {1 [3], 2 [3], 3 [1 2]}
+        colors {1 0}
+        neg-colors {3 #{0}}
+        used-colors #{0}
+        color-limit 2
+        items-add [[2 [1]]]
+        items-del []
+        act (grc.cp/set-node-color-aux nodes
+                                       colors
+                                       neg-colors
+                                       used-colors
+                                       color-limit
+                                       items-add
+                                       items-del)
+        exp [:fail]
+        ]
+    (is (= exp act))
+    ))
+
