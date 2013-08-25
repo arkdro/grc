@@ -248,6 +248,7 @@
                                          [])
         ]
     (is (= [{} #{} []] act))
+    (is (= [:a2 :a3 []] (grc.cp/get-new-items-on-add :a1 :a2 :a3 nil)))
     ))
 
 (deftest get-new-items-on-add-test-2
