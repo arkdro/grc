@@ -402,3 +402,26 @@
     (is (= exp act))
     ))
 
+(def set-node-color-aux-test-4
+  (let [nodes {1 [3], 2 [3], 3 [1 2]}
+        colors {}
+        neg-colors {}
+        used-colors #{}
+        color-limit 2
+        items-add [[0 [1]]]
+        items-del []
+        act (grc.cp/set-node-color-aux nodes
+                                       colors
+                                       neg-colors
+                                       used-colors
+                                       color-limit
+                                       items-add
+                                       items-del)
+        exp [{1 0, 2 0, 3 1}
+             {1 #{1}, 2 #{1}, 3 #{0}}
+             #{0 1}
+             ]
+        ]
+    (is (= exp act))
+    ))
+
